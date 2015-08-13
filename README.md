@@ -40,5 +40,27 @@ Server may take a while to actually start since it will download the following f
 # Check privoxy filtering or not
 
   - This page should be Blocked if privoxy is working!
-  
+
   	http://www.advertising.com
+
+# Privoxy Chaining Tor
+
+
+  - Added ability to chain proxy 
+
+  	Add the following environment variable will allow scripts to automatically add forwarding directives to configuration
+
+  	FORWARD_DNS=tor
+  	FORWARD_PORT=5566
+
+  - Checkout "carbonsphere/rotating-proxy". It is a cached proxy + Tor proxy.
+
+  	docker run -d --name tor -p 5566:5566 carbonsphere/rotating-proxy 
+
+ Note: rotating proxy may require sometime to initialize. Check rotating proxy first before starting privoxy.
+
+  	docker run -d --name privoxy -p 8118:8118 --link tor:tor -e FORWARD_DNS=tor -e FORWARD_PORT=5566 carbonsphere/dock-privoxy
+
+This setup will allow you to use the following connection path.
+
+  Client (Web Browser) ---->  Privoxy (none cached) ----> HA Proxy ----> Polipo n (cached) ----> Tor proxy n
