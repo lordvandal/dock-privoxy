@@ -4,7 +4,8 @@
 FROM alpine:latest
 
 RUN apk update
-RUN apk -y add privoxy wget; yum -y clean all
+RUN apk upgrade
+RUN apk add privoxy wget
 
 ADD run.sh /usr/local/bin/run.sh
 RUN /bin/sed -i "s/listen-address  127.0.0.1/listen-address  0.0.0.0/g" /etc/privoxy/config
