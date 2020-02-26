@@ -12,7 +12,7 @@ EASYLISTB=easylist.script.action
 PRIVOXY_CONF=/etc/privoxy/config
 FORWARD_RULE="forward   /       "
 RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
-if [ ("$FORWARD_DNS" != "") && ("FORWARD_PORT" != "") ]; then
+if [ "$FORWARD_DNS" != "" ] && [ "$FORWARD_PORT" != "" ]; then
   echo "Forwarding DNS exist. Adding forwarding directive to ${PRIVOXY_CONF}"
   #comment out existing directive
   sed -i "/$(echo "${FORWARD_RULE}" | sed "s#\/#\\\/#g")/d" ${PRIVOXY_CONF}
@@ -20,7 +20,7 @@ if [ ("$FORWARD_DNS" != "") && ("FORWARD_PORT" != "") ]; then
   echo "${FORWARD_RULE}${FORWARD_DNS}:${FORWARD_PORT}" >> ${PRIVOXY_CONF}
 fi
 
-if [[ (-e "$PRIVOXYDIR/$EASYLISTA") && (-e "$PRIVOXYDIR/$EASYLISTB") ]]; then
+if [ -e "$PRIVOXYDIR/$EASYLISTA" ] && [ -e "$PRIVOXYDIR/$EASYLISTB" ]; then
   echo "Easy Lists Found. Skipping download..."
 else
   echo "Files not found! Running download..."
