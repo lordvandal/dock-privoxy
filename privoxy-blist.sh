@@ -37,7 +37,7 @@ usage()
   echo "      -r:    Remove all lists build by this script."
 }
 
-[ "$(id -u)" -ne 0 ] && echo "Root privileges needed. Exit" && usage && exit 1
+[ "$(id -u)" -ne 0 ] && echo -e "Root privileges needed. Exit\n\n" && usage && exit 1
 
 # dependencies
 #DEPENDS=( 'privoxy' 'sed' 'grep' 'bash' 'wget' )
@@ -58,7 +58,7 @@ fi
 
 debug()
 {
-  [ "${DBG}" -ge "${2}" ] && echo "${1}"
+  [ "${DBG}" -ge "${2}" ] && echo -e "${1}"
 }
 
 main()
@@ -82,7 +82,7 @@ main()
     # convert AdblockPlus list to Privoxy list
     # blacklist of urls
     debug "Creating actionfile for ${list} ..." 1
-    echo "{ +block{${list}} }" > "${actionfile}"
+    echo -e "{ +block{${list}} }" > "${actionfile}"
     sed '/^!.*/d;1,1 d;/^@@.*/d;/\$.*/d;/#/d;s/\./\\./g;s/\?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' "${file}" >> "${actionfile}"
 
     debug "... creating filterfile for ${list} ..." 1
@@ -240,7 +240,7 @@ do
       [ "${choice}" != "y" ] && exit 0
       rm -rf "${PRIVOXY_DIR}"/*.script.action "${PRIVOXY_DIR}"/*.script.filter && \
       sed '/^actionsfile .*\.script\.action$/d;/^filterfile .*\.script\.filter$/d' -i "${PRIVOXY_CONF}" && echo "Lists removed." && exit 0
-      echo "An error occured while removing the lists. Please have a look into ${PRIVOXY_DIR} whether there are .script.* files and search for *.script.* in ${PRIVOXY_CONF}."
+      echo -e "An error occured while removing the lists.\nPlease have a look into ${PRIVOXY_DIR} whether there are .script.* files and search for *.script.* in ${PRIVOXY_CONF}."
       exit 1
       ;;
     ":")
