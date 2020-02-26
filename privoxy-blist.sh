@@ -161,8 +161,8 @@ then
   echo "No config found in ${SCRIPTCONF}. Creating default one and exiting because you might have to adjust it."
   echo "# Config of privoxy-blocklist
 # array of URL for AdblockPlus lists
-#  for more sources just add it within the round brackets
-URLS=\"https://easylist-downloads.adblockplus.org/easylistgermany.txt\" \"http://adblockplus.mozdev.org/easylist/easylist.txt\"
+#  for more sources just add it within the ' and '
+URLS='https://easylist-downloads.adblockplus.org/easylist.txt https://easylist-downloads.adblockplus.org/easyprivacy.txt https://easylist-downloads.adblockplus.org/easylistgermany.txt https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt'
 # config for privoxy initscript providing PRIVOXY_CONF, PRIVOXY_USER and PRIVOXY_GROUP
 INIT_CONF=\"/etc/conf.d/privoxy\"
 # !! if the config above doesn't exist set these variables here !!
