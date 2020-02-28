@@ -164,12 +164,12 @@ then
 #  for more sources just add it within the ' and '
 URLS='https://easylist-downloads.adblockplus.org/easylist.txt https://easylist-downloads.adblockplus.org/easyprivacy.txt https://easylist-downloads.adblockplus.org/easylistgermany.txt https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt'
 # config for privoxy initscript providing PRIVOXY_CONF, PRIVOXY_USER and PRIVOXY_GROUP
-INIT_CONF=\"/etc/conf.d/privoxy\"
+INIT_CONF='/etc/conf.d/privoxy'
 # !! if the config above doesn't exist set these variables here !!
 # !! These values will be overwritten by INIT_CONF !!
-#PRIVOXY_USER=\"privoxy\"
-#PRIVOXY_GROUP=\"privoxy\"
-#PRIVOXY_CONF=\"/etc/privoxy/config\"
+#PRIVOXY_USER='privoxy'
+#PRIVOXY_GROUP='privoxy'
+#PRIVOXY_CONF='/etc/privoxy/config'
 # name for lock file (default: script name)
 TMPNAME=\"\$(basename \${0})\"
 # directory for temporary files
