@@ -197,6 +197,13 @@ fi
 [ -z "${PRIVOXY_USER}" ] && echo "\$PRIVOXY_USER isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 [ -z "${PRIVOXY_GROUP}" ] && echo "\$PRIVOXY_GROUP isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 
+echo "PRIVOXY_CONF: ${PRIVOXY_CONF}"
+echo "PRIVOXY_USER: ${PRIVOXY_USER}"
+echo "PRIVOXY_GROUP: ${PRIVOXY_GROUP}"
+echo "TMPNAME: ${TMPNAME}"
+echo "TMPDIR: ${TMPDIR}"
+echo "INIT_CONF: ${INIT_CONF}"
+
 # set command to be run on exit
 [ "${DBG}" -le 2 ] && trap 'rm -fr ${TMPDIR};exit' INT TERM EXIT
 
