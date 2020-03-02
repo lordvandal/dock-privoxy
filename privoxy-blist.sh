@@ -17,8 +17,6 @@
 
 # script config-file
 SCRIPTCONF=/usr/local/bin/privoxy-blist.conf
-# dependencies
-DEPENDS=( 'privoxy' 'sed' 'grep' 'bash' 'wget' )
 
 ######################################################################
 #
@@ -26,7 +24,7 @@ DEPENDS=( 'privoxy' 'sed' 'grep' 'bash' 'wget' )
 #
 ######################################################################
 
-function usage()
+usage()
 {
   echo "${TMPNAME} is a script to convert AdBlockPlus-lists into Privoxy-lists and install them."
   echo " "
@@ -39,58 +37,61 @@ function usage()
   echo "      -r:    Remove all lists build by this script."
 }
 
-[ ${UID} -ne 0 ] && echo -e "Root privileges needed. Exit.\n\n" && usage && exit 1
+[ "$(id -u)" -ne 0 ] && echo -e "Root privileges needed. Exit\n\n" && usage && exit 1
 
-for dep in ${DEPENDS[@]}
+# dependencies
+#DEPENDS=( 'privoxy' 'sed' 'grep' 'bash' 'wget' )
+for dep in '/usr/sbin/privoxy' '/bin/sed' '/bin/grep' '/bin/sh' '/usr/bin/wget'
 do
-  if ! type -p ${dep} >/dev/null
+  if ! [ -f $dep ]
   then
     echo "The command ${dep} can't be found. Please install the package providing ${dep} and run $0 again. Exit" >&2
     exit 1
   fi
 done
 
-if [[ ! -d "$(dirname ${SCRIPTCONF})" ]]
+if [ ! -d "$(dirname ${SCRIPTCONF})" ]
 then
   echo "The config directory $(dirname ${SCRIPTCONF}) doesn't exist. Please either adjust the variable SCRIPTCONF in this script or create the directory." >&2
   exit 1
 fi
 
-function debug()
+debug()
 {
-  [ ${DBG} -ge ${2} ] && echo -e "${1}"
+  [ "${DBG}" -ge "${2}" ] && echo -e "${1}"
 }
 
-function main()
+main()
 {
-  for url in ${URLS[@]}
+  for url in $URLS
   do
     debug "Processing ${url} ...\n" 0
-    file=${TMPDIR}/$(basename ${url})
+    file=${TMPDIR}/$(basename "${url}")
     actionfile=${file%\.*}.script.action
     filterfile=${file%\.*}.script.filter
-    list=$(basename ${file%\.*})
+    list=$(basename "${file%\.*}")
 
     # download list
     debug "Downloading ${url} ..." 0
-    wget -t 3 --no-check-certificate -O ${file} ${url} >${TMPDIR}/wget-${url//\//#}.log 2>&1
-    debug "$(cat ${TMPDIR}/wget-${url//\//#}.log)" 2
+    urlhash=$(printf '%s' "$url" | tr '/' '#')
+    wget -t 3 --no-check-certificate -O "${file}" "${url}" >"${TMPDIR}"/wget-"$urlhash".log 2>&1
+    debug "$(cat "${TMPDIR}"/wget-"$urlhash".log)" 2
     debug ".. downloading done." 0
-    [ "$(grep -E '^.*\[Adblock.*\].*$' ${file})" == "" ] && echo "The list recieved from ${url} isn't an AdblockPlus list. Skipped" && continue
+    [ "$(grep -E '^.*\[Adblock.*\].*$' "${file}")" = "" ] && echo "The list recieved from ${url} isn't an AdblockPlus list. Skipped" && continue
 
     # convert AdblockPlus list to Privoxy list
     # blacklist of urls
     debug "Creating actionfile for ${list} ..." 1
-    echo -e "{ +block{${list}} }" > ${actionfile}
-    sed '/^!.*/d;1,1 d;/^@@.*/d;/\$.*/d;/#/d;s/\./\\./g;s/\?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' ${file} >> ${actionfile}
+    echo -e "{ +block{${list}} }" > "${actionfile}"
+    sed '/^!.*/d;1,1 d;/^@@.*/d;/\$.*/d;/#/d;s/\./\\./g;s/?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' "${file}" >> "${actionfile}"
 
     debug "... creating filterfile for ${list} ..." 1
-    echo "FILTER: ${list} Tag filter of ${list}" > ${filterfile}
+    echo "FILTER: ${list} Tag filter of ${list}" > "${filterfile}"
     # set filter for html elements
-    sed '/^#/!d;s/^##//g;s/^#\(.*\)\[.*\]\[.*\]*/s@<([a-zA-Z0-9]+)\\s+.*id=.?\1.*>.*<\/\\1>@@g/g;s/^#\(.*\)/s@<([a-zA-Z0-9]+)\\s+.*id=.?\1.*>.*<\/\\1>@@g/g;s/^\.\(.*\)/s@<([a-zA-Z0-9]+)\\s+.*class=.?\1.*>.*<\/\\1>@@g/g;s/^a\[\(.*\)\]/s@<a.*\1.*>.*<\/a>@@g/g;s/^\([a-zA-Z0-9]*\)\.\(.*\)\[.*\]\[.*\]*/s@<\1.*class=.?\2.*>.*<\/\1>@@g/g;s/^\([a-zA-Z0-9]*\)#\(.*\):.*[:[^:]]*[^:]*/s@<\1.*id=.?\2.*>.*<\/\1>@@g/g;s/^\([a-zA-Z0-9]*\)#\(.*\)/s@<\1.*id=.?\2.*>.*<\/\1>@@g/g;s/^\[\([a-zA-Z]*\).=\(.*\)\]/s@\1^=\2>@@g/g;s/\^/[\/\&:\?=_]/g;s/\.\([a-zA-Z0-9]\)/\\.\1/g' ${file} >> ${filterfile}
+    sed '/^#/!d;s/^##//g;s/^#\(.*\)\[.*\]\[.*\]*/s@<([a-zA-Z0-9]+)\\s+.*id=.?\1.*>.*<\/\\1>@@g/g;s/^#\(.*\)/s@<([a-zA-Z0-9]+)\\s+.*id=.?\1.*>.*<\/\\1>@@g/g;s/^\.\(.*\)/s@<([a-zA-Z0-9]+)\\s+.*class=.?\1.*>.*<\/\\1>@@g/g;s/^a\[\(.*\)\]/s@<a.*\1.*>.*<\/a>@@g/g;s/^\([a-zA-Z0-9]*\)\.\(.*\)\[.*\]\[.*\]*/s@<\1.*class=.?\2.*>.*<\/\1>@@g/g;s/^\([a-zA-Z0-9]*\)#\(.*\):.*[:[^:]]*[^:]*/s@<\1.*id=.?\2.*>.*<\/\1>@@g/g;s/^\([a-zA-Z0-9]*\)#\(.*\)/s@<\1.*id=.?\2.*>.*<\/\1>@@g/g;s/^\[\([a-zA-Z]*\).=\(.*\)\]/s@\1^=\2>@@g/g;s/\^/[\/\&:\?=_]/g;s/\.\([a-zA-Z0-9]\)/\\.\1/g' "${file}" >> "${filterfile}"
     debug "... filterfile created - adding filterfile to actionfile ..." 1
-    echo "{ +filter{${list}} }" >> ${actionfile}
-    echo "*" >> ${actionfile}
+    echo "{ +filter{${list}} }" >> "${actionfile}"
+    echo "*" >> "${actionfile}"
     debug "... filterfile added ..." 1
 
     # create domain based whitelist
@@ -118,36 +119,36 @@ function main()
 
     debug "... creating and adding whitlist for urls ..." 1
     # whitelist of urls
-    echo "{ -block }" >> ${actionfile}
-    sed '/^@@.*/!d;s/^@@//g;/\$.*/d;/#/d;s/\./\\./g;s/\?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' ${file} >> ${actionfile}
+    echo "{ -block }" >> "${actionfile}"
+    sed '/^@@.*/!d;s/^@@//g;/\$.*/d;/#/d;s/\./\\./g;s/?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' "${file}" >> "${actionfile}"
     debug "... created and added whitelist - creating and adding image handler ..." 1
     # whitelist of image urls
-    echo "{ -block +handle-as-image }" >> ${actionfile}
-    sed '/^@@.*/!d;s/^@@//g;/\$.*image.*/!d;s/\$.*image.*//g;/#/d;s/\./\\./g;s/\?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' ${file} >> ${actionfile}
+    echo "{ -block +handle-as-image }" >> "${actionfile}"
+    sed '/^@@.*/!d;s/^@@//g;/\$.*image.*/!d;s/\$.*image.*//g;/#/d;s/\./\\./g;s/?/\\?/g;s/\*/.*/g;s/(/\\(/g;s/)/\\)/g;s/\[/\\[/g;s/\]/\\]/g;s/\^/[\/\&:\?=_]/g;s/^||/\./g;s/^|/^/g;s/|$/\$/g;/|/d' "${file}" >> "${actionfile}"
     debug "... created and added image handler ..." 1
     debug "... created actionfile for ${list}." 1
     
     # install Privoxy actionsfile
-    install -o ${PRIVOXY_USER} -g ${PRIVOXY_GROUP} ${VERBOSE} ${actionfile} ${PRIVOXY_DIR}
-    if [ "$(grep $(basename ${actionfile}) ${PRIVOXY_CONF})" == "" ] 
+    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" "${VERBOSE}" "${actionfile}" "${PRIVOXY_DIR}"
+    if [ "$(grep "$(basename "${actionfile}")" "${PRIVOXY_CONF}")" = "" ] 
     then
       debug "\nModifying ${PRIVOXY_CONF} ..." 0
-      sed "s/^actionsfile user\.action/actionsfile $(basename ${actionfile})\nactionsfile user.action/" ${PRIVOXY_CONF} > ${TMPDIR}/config
+      sed "s/^actionsfile user\.action/actionsfile $(basename "${actionfile}")\nactionsfile user.action/" "${PRIVOXY_CONF}" > "${TMPDIR}"/config
       debug "... modification done.\n" 0
       debug "Installing new config ..." 0
-      install -o ${PRIVOXY_USER} -g ${PRIVOXY_GROUP} ${VERBOSE} ${TMPDIR}/config ${PRIVOXY_CONF}
+      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
       debug "... installation done\n" 0
-    fi	
+    fi
 
     # install Privoxy filterfile
-    install -o ${PRIVOXY_USER} -g ${PRIVOXY_GROUP} ${VERBOSE} ${filterfile} ${PRIVOXY_DIR}
-    if [ "$(grep $(basename ${filterfile}) ${PRIVOXY_CONF})" == "" ]
+    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" "${VERBOSE}" "${filterfile}" "${PRIVOXY_DIR}"
+    if [ "$(grep "$(basename "${filterfile}")" "${PRIVOXY_CONF}")" = "" ]
     then
       debug "\nModifying ${PRIVOXY_CONF} ..." 0
-      sed "s/^\(#*\)filterfile user\.filter/filterfile $(basename ${filterfile})\n\1filterfile user.filter/" ${PRIVOXY_CONF} > ${TMPDIR}/config
+      sed "s/^\(#*\)filterfile user\.filter/filterfile $(basename "${filterfile}")\n\1filterfile user.filter/" "${PRIVOXY_CONF}" > "${TMPDIR}"/config
       debug "... modification done.\n" 0
       debug "Installing new config ..." 0
-      install -o ${PRIVOXY_USER} -g ${PRIVOXY_GROUP} ${VERBOSE} ${TMPDIR}/config ${PRIVOXY_CONF}
+      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
       debug "... installation done\n" 0
     fi	
 
@@ -155,20 +156,20 @@ function main()
   done
 }
 
-if [[ ! -f "${SCRIPTCONF}" ]]
+if [ ! -f "${SCRIPTCONF}" ]
 then
   echo "No config found in ${SCRIPTCONF}. Creating default one and exiting because you might have to adjust it."
   echo "# Config of privoxy-blocklist
 # array of URL for AdblockPlus lists
-#  for more sources just add it within the round brackets
-URLS=(\"https://easylist-downloads.adblockplus.org/easylistgermany.txt\" \"http://adblockplus.mozdev.org/easylist/easylist.txt\")
+#  for more sources just add it within the ' and '
+URLS='https://easylist-downloads.adblockplus.org/easylist.txt https://easylist-downloads.adblockplus.org/easyprivacy.txt https://easylist-downloads.adblockplus.org/easylistgermany.txt https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt'
 # config for privoxy initscript providing PRIVOXY_CONF, PRIVOXY_USER and PRIVOXY_GROUP
-INIT_CONF=\"/etc/conf.d/privoxy\"
+INIT_CONF='/etc/conf.d/privoxy'
 # !! if the config above doesn't exist set these variables here !!
 # !! These values will be overwritten by INIT_CONF !!
-#PRIVOXY_USER=\"privoxy\"
-#PRIVOXY_GROUP=\"privoxy\"
-#PRIVOXY_CONF=\"/etc/privoxy/config\"
+#PRIVOXY_USER='privoxy'
+#PRIVOXY_GROUP='privoxy'
+#PRIVOXY_CONF='/etc/privoxy/config'
 # name for lock file (default: script name)
 TMPNAME=\"\$(basename \${0})\"
 # directory for temporary files
@@ -184,33 +185,33 @@ DBG=0
   exit 1
 fi
 
-[[ ! -r "${SCRIPTCONF}" ]] && debug "Can't read ${SCRIPTCONF}. Permission denied." -1
+[ ! -r "${SCRIPTCONF}" ] && debug "Can't read ${SCRIPTCONF}. Permission denied." -1
 
 # load script config
 source "${SCRIPTCONF}"
 # load privoxy config
-[[ -r "${INIT_CONF}" ]] && source "${INIT_CONF}"
+[ -r "${INIT_CONF}" ] && . "${INIT_CONF}"
 
 # check whether needed variables are set
-[[ -z "${PRIVOXY_CONF}" ]] && echo "\$PRIVOXY_CONF isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
-[[ -z "${PRIVOXY_USER}" ]] && echo "\$PRIVOXY_USER isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
-[[ -z "${PRIVOXY_GROUP}" ]] && echo "\$PRIVOXY_GROUP isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
+[ -z "${PRIVOXY_CONF}" ] && echo "\$PRIVOXY_CONF isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
+[ -z "${PRIVOXY_USER}" ] && echo "\$PRIVOXY_USER isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
+[ -z "${PRIVOXY_GROUP}" ] && echo "\$PRIVOXY_GROUP isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 
 # set command to be run on exit
-[ ${DBG} -le 2 ] && trap "rm -fr ${TMPDIR};exit" INT TERM EXIT
+[ "${DBG}" -le 2 ] && trap 'rm -fr ${TMPDIR};exit' INT TERM EXIT
 
 # set privoxy config dir
-PRIVOXY_DIR="$(dirname ${PRIVOXY_CONF})"
+PRIVOXY_DIR="$(dirname "${PRIVOXY_CONF}")"
 
 # create temporary directory and lock file
-install -d -m700 ${TMPDIR}
+install -d -m700 "${TMPDIR}"
 
 # check lock file
 if [ -f "${TMPDIR}/${TMPNAME}.lock" ]
 then
   read -r fpid <"${TMPDIR}/${TMPNAME}.lock"
   ppid=$(pidof -o %PPID -x "${TMPNAME}")
-  if [[ $fpid = "${ppid}" ]] 
+  if [ "$fpid" = "${ppid}" ]
   then
     echo "An Instance of ${TMPNAME} is already running. Exit" && exit 1
   else
@@ -235,10 +236,10 @@ do
       DBG=-1
       ;;
     "r")
-      read -p "Do you really want to remove all build lists?(y/N) " choice
+      read -r "Do you really want to remove all build lists?(y/N) " choice
       [ "${choice}" != "y" ] && exit 0
-      rm -rf ${PRIVOXY_DIR}/*.script.{action,filter} && \
-      sed '/^actionsfile .*\.script\.action$/d;/^filterfile .*\.script\.filter$/d' -i ${PRIVOXY_CONF} && echo "Lists removed." && exit 0
+      rm -rf "${PRIVOXY_DIR}"/*.script.action "${PRIVOXY_DIR}"/*.script.filter && \
+      sed '/^actionsfile .*\.script\.action$/d;/^filterfile .*\.script\.filter$/d' -i "${PRIVOXY_CONF}" && echo "Lists removed." && exit 0
       echo -e "An error occured while removing the lists.\nPlease have a look into ${PRIVOXY_DIR} whether there are .script.* files and search for *.script.* in ${PRIVOXY_CONF}."
       exit 1
       ;;
