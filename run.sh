@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ash
 
 #bash syntax with [[ and ]], Bourne shell (sh/busybox) syntax for alpine linux is with [ and ]
 
