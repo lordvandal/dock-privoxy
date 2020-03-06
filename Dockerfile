@@ -5,7 +5,10 @@ FROM alpine:latest
 
 RUN apk update
 RUN apk upgrade
-RUN apk add privoxy wget
+RUN apk add privoxy wget tzdata
+RUN cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime
+RUN echo "Europe/Bucharest" > /etc/timezone
+RUN apk del tzdata
 
 COPY run.sh /usr/local/bin/run.sh
 RUN /bin/sed -i "s/listen-address  127.0.0.1/listen-address  0.0.0.0/g" /etc/privoxy/config
