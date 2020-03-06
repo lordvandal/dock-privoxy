@@ -19,6 +19,12 @@ Server may take a while to actually start since it will download the following f
 
 	https://easylist-downloads.adblockplus.org/easyprivacy.txt
 
+	https://easylist-downloads.adblockplus.org/easylistgermany.txt
+	
+	https://easylist-downloads.adblockplus.org/easylistchina.txt
+	
+	https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
+
 	https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt
 
 # You can check privoxy service by using the following docker command
