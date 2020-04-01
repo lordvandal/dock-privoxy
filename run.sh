@@ -20,11 +20,11 @@ if [ "$FORWARD_DNS" != "" ] && [ "$FORWARD_PORT" != "" ]; then
   echo "${FORWARD_RULE}${FORWARD_DNS}:${FORWARD_PORT}" >> ${PRIVOXY_CONF}
 fi
 
-if [ -e "$PRIVOXYDIR/$EASYLISTA" ] && [ -e "$PRIVOXYDIR/$EASYLISTB" ]; then
-  echo "Easy Lists Found. Skipping download..."
-else
-  echo "Files not found! Running download..."
+#if [ -e "$PRIVOXYDIR/$EASYLISTA" ] && [ -e "$PRIVOXYDIR/$EASYLISTB" ]; then
+#  echo "Easy Lists Found. Skipping download..."
+#else
+#  echo "Files not found! Running download..."
   /usr/local/bin/privoxy-blist.sh -v 1
-fi
+#fi
 
 /usr/sbin/privoxy --no-daemon /etc/privoxy/config
