@@ -1,6 +1,7 @@
 ############################################################
 # Dockerfile: Alpine Linux :latest & Privoxy
 ############################################################
+
 FROM alpine:latest
 
 RUN apk update
