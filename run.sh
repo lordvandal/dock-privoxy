@@ -1,6 +1,6 @@
 #!/bin/ash
 
-#bash syntax with [[ and ]], Bourne shell (sh/busybox) syntax for alpine linux is with [ and ]
+#bash syntax is with [[ and ]], adapted to Bourne shell (sh/busybox) syntax for alpine linux is with [ and ]
 
 PRIVOXYDIR=/etc/privoxy
 EASYLISTA=easylist.script.filter
