@@ -6,7 +6,7 @@ FROM alpine:latest
 
 RUN apk update
 RUN apk upgrade
-RUN apk add privoxy wget tzdata
+RUN apk add privoxy privoxy-doc wget tzdata
 RUN cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime
 RUN echo "Europe/Bucharest" > /etc/timezone
 RUN apk del tzdata
