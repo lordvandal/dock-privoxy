@@ -4,19 +4,15 @@
 
 FROM alpine:latest
 
-#RUN apk update
-#RUN apk upgrade --no-cache
-#RUN apk add --no-cache privoxy privoxy-doc wget tzdata
-#RUN cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime
-#RUN echo "Europe/Bucharest" > /etc/timezone
-#RUN apk del tzdata
+COPY run.sh /usr/local/bin/run.sh
+
 RUN apk upgrade --no-cache && \
     apk add --no-cache privoxy privoxy-doc wget tzdata &&\
     cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime &&\
     echo "Europe/Bucharest" > /etc/timezone && \
-    apk del tzdata
+    apk del tzdata &&\
+    chmod +x /usr/local/bin/run.sh
 
-COPY run.sh /usr/local/bin/run.sh
 RUN /bin/sed -i "s/listen-address  127.0.0.1/listen-address  0.0.0.0/g" /etc/privoxy/config
 COPY privoxy-blist.sh /usr/local/bin/privoxy-blist.sh
 COPY privoxy-blist.conf /usr/local/bin/privoxy-blist.conf
