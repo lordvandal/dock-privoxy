@@ -1,5 +1,6 @@
-Author  : CarbonSphere <br>
-Email   : carbonsphere@gmail.com<br>
+Author      : CarbonSphere <br>
+Email       : carbonsphere@gmail.com<br>
+Improvements: lordvandal
 
 # Privoxy
 
