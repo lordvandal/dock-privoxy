@@ -21,6 +21,4 @@ COPY privoxy-blist.conf /usr/local/bin/privoxy-blist.conf
 
 EXPOSE 8118
 
-ENTRYPOINT ["/bin/sh", "-c"]
-
 CMD ["run.sh"]
