@@ -77,7 +77,7 @@ main()
     wget -t 3 --no-check-certificate -O "${file}" "${url}" >"${TMPDIR}"/wget-"$urlhash".log 2>&1
     debug "$(cat "${TMPDIR}"/wget-"$urlhash".log)" 2
     debug ".. downloading done." 0
-    [ "$(grep -E '^.*\[Adblock.*\].*$' "${file}")" = "" ] && echo "The list recieved from ${url} isn't an AdblockPlus list. Skipped" && continue
+    [ "$(grep -E '^.*\[Adblock.*\].*$' "${file}")" = "" ] && echo "The list received from ${url} isn't an AdblockPlus list. Skipped" && continue
 
     # convert AdblockPlus list to Privoxy list
     # blacklist of urls
@@ -129,26 +129,26 @@ main()
     debug "... created actionfile for ${list}." 1
     
     # install Privoxy actionsfile
-    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE} "${VERBOSE}" "${actionfile}" "${PRIVOXY_DIR}"
+    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE}" "${VERBOSE}" "${actionfile}" "${PRIVOXY_DIR}"
     if [ "$(grep "$(basename "${actionfile}")" "${PRIVOXY_CONF}")" = "" ] 
     then
       debug "\nModifying ${PRIVOXY_CONF} ..." 0
       sed "s/^actionsfile user\.action/actionsfile $(basename "${actionfile}")\nactionsfile user.action/" "${PRIVOXY_CONF}" > "${TMPDIR}"/config
       debug "... modification done.\n" 0
       debug "Installing new config ..." 0
-      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE} "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
+      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE}" "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
       debug "... installation done\n" 0
     fi
 
     # install Privoxy filterfile
-    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE} "${VERBOSE}" "${filterfile}" "${PRIVOXY_DIR}"
+    install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE}" "${VERBOSE}" "${filterfile}" "${PRIVOXY_DIR}"
     if [ "$(grep "$(basename "${filterfile}")" "${PRIVOXY_CONF}")" = "" ]
     then
       debug "\nModifying ${PRIVOXY_CONF} ..." 0
       sed "s/^\(#*\)filterfile user\.filter/filterfile $(basename "${filterfile}")\n\1filterfile user.filter/" "${PRIVOXY_CONF}" > "${TMPDIR}"/config
       debug "... modification done.\n" 0
       debug "Installing new config ..." 0
-      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE} "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
+      install -o "${PRIVOXY_USER}" -g "${PRIVOXY_GROUP}" -m "${PRIVOXY_MODE}" "${VERBOSE}" "${TMPDIR}"/config "${PRIVOXY_CONF}"
       debug "... installation done\n" 0
     fi	
 
