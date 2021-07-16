@@ -163,7 +163,7 @@ then
 # array of URL for AdblockPlus lists
 #  for more sources just add it within the ' and '
 URLS='https://easylist-downloads.adblockplus.org/easylist.txt https://easylist-downloads.adblockplus.org/easyprivacy.txt https://easylist-downloads.adblockplus.org/easylistgermany.txt https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt https://hg.adblockplus.org/ruadlist/raw-file/tip/advblock/adservers.txt https://hg.adblockplus.org/ruadlist/raw-file/tip/advblock/specific_block.txt https://hg.adblockplus.org/ruadlist/raw-file/tip/advblock/specific_hide.txt https://hg.adblockplus.org/ruadlist/raw-file/tip/advblock/specific_special.txt'
-# config for privoxy initscript providing PRIVOXY_CONF, PRIVOXY_USER and PRIVOXY_GROUP
+# config for privoxy initscript providing PRIVOXY_CONF, PRIVOXY_USER, PRIVOXY_MODE and PRIVOXY_GROUP
 INIT_CONF='/etc/conf.d/privoxy'
 # !! if the config above doesn't exist set these variables here !!
 # !! These values will be overwritten by INIT_CONF !!
@@ -197,6 +197,7 @@ source "${SCRIPTCONF}"
 [ -z "${PRIVOXY_CONF}" ] && echo "\$PRIVOXY_CONF isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 [ -z "${PRIVOXY_USER}" ] && echo "\$PRIVOXY_USER isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 [ -z "${PRIVOXY_GROUP}" ] && echo "\$PRIVOXY_GROUP isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
+[ -z "${PRIVOXY_MODE}" ] && echo "\$PRIVOXY_MODE isn't set please either provice a valid initscript config or set it in ${SCRIPTCONF} ." >&2 && exit 1
 
 # set command to be run on exit
 [ "${DBG}" -le 2 ] && trap 'rm -fr ${TMPDIR};exit' INT TERM EXIT
