@@ -1,6 +1,9 @@
-Author      : CarbonSphere <br>
-Email       : carbonsphere@gmail.com<br>
-Improvements: lordvandal
+Author: [CarbonSphere](https://github.com/carbonsphere) <br>
+Email: carbonsphere@gmail.com<br>
+Original repository: https://github.com/carbonsphere/dock-privoxy
+
+Improvements: [lordvandal](https://github.com/lordvandal)
+Repository: https://github.com/lordvandal/dock-privoxy
 
 # Privoxy
 
