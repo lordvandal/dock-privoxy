@@ -1,8 +1,8 @@
-Author: [CarbonSphere](https://github.com/carbonsphere) <br>
+Author: [CarbonSphere](https://github.com/carbonsphere)<br>
 Email: carbonsphere@gmail.com<br>
 Original repository: https://github.com/carbonsphere/dock-privoxy
 
-Improvements: [lordvandal](https://github.com/lordvandal)
+Improvements: [lordvandal](https://github.com/lordvandal)<br>
 Repository: https://github.com/lordvandal/dock-privoxy
 
 # Privoxy
