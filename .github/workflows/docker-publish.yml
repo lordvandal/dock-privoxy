@@ -61,7 +61,7 @@ jobs:
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
-        uses: docker/build-push-action@a66e35b9cbcf4ad0ea91ffcaf7bbad63ad9e0229
+        uses: docker/build-push-action@5e11b373bfed0d8024ef33d1586c675819690e95
       #  uses: docker/build-push-action@v2
         with:
           context: .
