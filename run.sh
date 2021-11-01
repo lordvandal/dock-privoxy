@@ -2,17 +2,6 @@
 
 # bash syntax is with [[ and ]], adapted to Bourne shell (sh/busybox) syntax for alpine linux is with [ and ]
 
-PRIVOXYDIR=/etc/privoxy
-EASYLISTA=easylist.script.filter
-EASYLISTB=easylist.script.action
-
-#FORWARD_DNS=tor
-#FORWARD_PORT=5566
-
-PRIVOXY_CONF=$PRIVOXYDIR/config
-FORWARD_RULE="forward   /       "
-RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
-
 config() {
   NEW="$1"
   OLD="$(dirname $NEW)/$(basename $NEW .new)"
@@ -61,6 +50,17 @@ config etc/privoxy/default.filter.new
 #done
 
 chown -R privoxy.privoxy $PRIVOXYDIR
+
+PRIVOXYDIR=/etc/privoxy
+EASYLISTA=easylist.script.filter
+EASYLISTB=easylist.script.action
+
+#FORWARD_DNS=tor
+#FORWARD_PORT=5566
+
+PRIVOXY_CONF=$PRIVOXYDIR/config
+FORWARD_RULE="forward   /       "
+RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
 
 if [ "$FORWARD_DNS" != "" ] && [ "$FORWARD_PORT" != "" ]; then
   echo "Forwarding DNS exist. Adding forwarding directive to ${PRIVOXY_CONF}"
