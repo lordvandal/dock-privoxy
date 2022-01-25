@@ -21,7 +21,7 @@ COPY privoxy-blist.conf /usr/local/bin/privoxy-blist.conf
 
 EXPOSE 8118
 
-HEALTHCHECK --interval=120s --timeout=15s --start-period=120s --retries=2 \
-            CMD wget --no-check-certificate -e use_proxy=yes -e https_proxy=127.0.0.1:8118 --quiet --spider 'https://duckduckgo.com' || && echo "HealthCheck failed!" exit 1
+# HEALTHCHECK --interval=300s --timeout=15s --start-period=300s --retries=2 \
+#            CMD wget --no-check-certificate -e use_proxy=yes -e https_proxy=127.0.0.1:8118 --quiet --spider 'https://duckduckgo.com' || exit 1
 
 CMD ["run.sh"]
