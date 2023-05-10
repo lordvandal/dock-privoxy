@@ -2,7 +2,7 @@
 # Dockerfile: Alpine Linux & Privoxy #
 ######################################
 
-FROM alpine:3.17.3
+FROM alpine:3.18.0
 
 COPY run.sh /usr/local/bin/run.sh
 
