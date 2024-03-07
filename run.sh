@@ -25,12 +25,25 @@ preserve_perms() {
   config $NEW
 }
 
+PRIVOXYDIR=/etc/privoxy
+EASYLISTA=easylist.script.filter
+EASYLISTB=easylist.script.action
+
+#FORWARD_DNS=tor
+#FORWARD_PORT=5566
+
+PRIVOXY_CONF=$PRIVOXYDIR/config
+FORWARD_RULE="forward   /       "
+RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
+
+chown -R privoxy.privoxy $PRIVOXYDIR
+
 # If there's no existing log file, move this one over; 
 # otherwise, kill the new one
 if [ ! -e var/log/privoxy/logfile ]; then
-  mv var/log/privoxy/logfile.new var/log/privoxy/logfile
+  mv /var/log/privoxy/logfile.new /var/log/privoxy/logfile
 else
-  rm -f var/log/privoxy/logfile.new
+  rm -f /var/log/privoxy/logfile.new
 fi
 
 #preserve_perms etc/rc.d/rc.privoxy.new
@@ -48,20 +61,6 @@ config etc/privoxy/default.filter.new
 #for conf_file in etc/privoxy/templates/*.new; do
 #  config $conf_file
 #done
-
-chown -R privoxy.privoxy $PRIVOXYDIR
-
-PRIVOXYDIR=/etc/privoxy
-EASYLISTA=easylist.script.filter
-EASYLISTB=easylist.script.action
-
-#FORWARD_DNS=tor
-#FORWARD_PORT=5566
-
-PRIVOXY_CONF=$PRIVOXYDIR/config
-FORWARD_RULE="forward   /       "
-RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
-
 if [ "$FORWARD_DNS" != "" ] && [ "$FORWARD_PORT" != "" ]; then
   echo "Forwarding DNS exist. Adding forwarding directive to ${PRIVOXY_CONF}"
   #comment out existing directive
