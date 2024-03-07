@@ -25,6 +25,6 @@ EXPOSE 8118
 #            CMD curl --fail -x http://127.0.0.1:8118 -s 'https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion' -k > /dev/null || exit 1
 HEALTHCHECK --interval=300s --timeout=15s --start-period=300s --retries=2 \
            CMD ( wget --no-check-certificate -e use_proxy=yes -e https_proxy=127.0.0.1:8118 --quiet --spider 'https://duckduckgo.com' || \
-           wget --no-check-certificate -e use_proxy=yes -e https_proxy=127.0.0.1:8118 --quiet --spider 'https://duckduckgo.com' ) || exit 1
+           wget --no-check-certificate -e use_proxy=yes -e https_proxy=127.0.0.1:8118 --quiet --spider 'https://google.com' ) || exit 1
 
 CMD ["run.sh"]
