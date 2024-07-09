@@ -1,6 +1,7 @@
 {
   "extends": [
-    "config:base", ":dependencyDashboard"
+    "config:recommended",
+    ":dependencyDashboard"
   ],
   "packageRules": [
     {
@@ -9,5 +10,5 @@
     }
   ],
   "rollbackPrs": true,
-  "includeForks": true
+  "forkProcessing": "enabled"
 }
