@@ -9,5 +9,6 @@
       // "automergeType": branch
     }
   ],
-  "rollbackPrs": true
+  "rollbackPrs": true,
+  "includeForks": true
 }
