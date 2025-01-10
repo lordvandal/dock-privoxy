@@ -21,9 +21,8 @@ jobs:
         with:
           base-image: alpine:latest
           image: lordvandal/dock-privoxy:latest
-
-      - name: Check result
-          # run: echo "Needs updating: ${{ steps.check.outputs.needs-updating }}"
+      # - name: Check result
+      #     run: echo "Needs updating: ${{ steps.check.outputs.needs-updating }}"
 
   build:
     needs: check
