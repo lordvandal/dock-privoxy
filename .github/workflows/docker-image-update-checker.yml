@@ -23,7 +23,7 @@ jobs:
           image: lordvandal/dock-privoxy:latest
 
       - name: Check result
-        run: echo "Needs updating: ${{ steps.check.outputs.needs-updating }}"
+          # run: echo "Needs updating: ${{ steps.check.outputs.needs-updating }}"
 
   build:
     needs: check
