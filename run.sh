@@ -73,7 +73,7 @@ fi
 #  echo "Easy Lists Found. Skipping download..."
 #else
 #  echo "Files not found! Running download..."
-  /usr/local/bin/privoxy-blist.sh -v 1
+  /usr/local/bin/privoxy-blocklist.sh -v 1
 #fi
 
 /usr/sbin/privoxy --no-daemon /etc/privoxy/config
