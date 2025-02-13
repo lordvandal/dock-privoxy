@@ -16,8 +16,8 @@ RUN apk upgrade --no-cache && \
 RUN for i in /etc/privoxy/config /etc/privoxy/config.new ; do \
         /bin/sed -i "s/listen-address  127.0.0.1/listen-address  0.0.0.0/g" $i ; \
     done
-COPY privoxy-blist.sh /usr/local/bin/privoxy-blist.sh
-COPY privoxy-blist.conf /usr/local/bin/privoxy-blist.conf
+COPY privoxy-blocklist.sh /usr/local/bin/privoxy-blocklist.sh
+COPY privoxy-blocklist.conf /usr/local/bin/privoxy-blocklist.conf
 
 EXPOSE 8118
 
