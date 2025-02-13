@@ -36,7 +36,7 @@ PRIVOXY_CONF=$PRIVOXYDIR/config
 FORWARD_RULE="forward   /       "
 RET=$(grep "^${FORWARD_RULE}" ${PRIVOXY_CONF})
 
-chown -R privoxy.privoxy $PRIVOXYDIR
+chown -R privoxy:privoxy $PRIVOXYDIR
 
 # If there's no existing log file, move this one over; 
 # otherwise, kill the new one
