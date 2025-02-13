@@ -7,7 +7,7 @@ FROM alpine:latest
 COPY run.sh /usr/local/bin/run.sh
 
 RUN apk upgrade --no-cache && \
-    apk add --no-cache privoxy privoxy-doc wget tzdata && \
+    apk add --no-cache bash privoxy privoxy-doc wget tzdata && \
     cp /usr/share/zoneinfo/Europe/Bucharest /etc/localtime && \
     echo "Europe/Bucharest" > /etc/timezone && \
     apk del tzdata &&\
