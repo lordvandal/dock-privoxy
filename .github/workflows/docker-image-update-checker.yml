@@ -6,6 +6,7 @@ name: Docker Image Update Checker
 # the platforms to check.
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '39 3 * * *'
 
