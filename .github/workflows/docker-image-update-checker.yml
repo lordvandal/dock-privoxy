@@ -11,8 +11,11 @@ on:
     - cron: '39 3 * * *'
 
 env:
+  # Use docker.io for Docker Hub if empty
+  # REGISTRY: ghcr.io
   REGISTRY: docker.io
-  IMAGE_NAME: lordvandal/dock-privoxy
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   check:
