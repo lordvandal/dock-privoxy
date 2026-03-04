@@ -12,13 +12,13 @@ on:
 
 jobs:
   check:
-    env:
+  runs-on: ubuntu-latest
+  env:
       # Use docker.io for Docker Hub if empty
       # REGISTRY: ghcr.io
       REGISTRY: docker.io
       # github.repository as <account>/<repo>
       IMAGE_NAME: ${{ github.repository }}
-  runs-on: ubuntu-latest
     outputs:
       needs-updating: ${{ steps.check.outputs.needs-updating }}
     steps:
