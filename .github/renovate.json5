@@ -3,6 +3,7 @@
     "config:recommended",
     ":dependencyDashboard"
   ],
+  "platformAutomerge": true,
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
