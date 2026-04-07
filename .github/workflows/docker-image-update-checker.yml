@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Check if update available
         id: check
-        uses: lucacome/docker-image-update-checker@v3.0.1
+        uses: lucacome/docker-image-update-checker@v3.1.0
         with:
           base-image: alpine:latest
           image: lordvandal/dock-privoxy:latest
